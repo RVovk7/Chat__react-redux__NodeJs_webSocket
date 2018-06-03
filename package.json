@@ -1,0 +1,16 @@
+{
+  "name": "chatv2",
+  "version": "1.0.0",
+  "description": "chat with using react_redux_webSocket_nodeJS",
+  "main": "index.js",
+  "author": "wolf",
+  "license": "MIT",
+  "scripts": {
+    "start:client": "cd client && yarn run w",
+    "start:server": "cd server && node app.js",
+    "start": "concurrently  \" yarn run start:server \" \" yarn run start:client \" "
+  },
+  "dependencies": {
+    "concurrently": "^3.5.1"
+  }
+}
