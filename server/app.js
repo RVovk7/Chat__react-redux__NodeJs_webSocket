@@ -15,17 +15,21 @@ colors.sort(function (a, b) {
 let clients = [];
 
 wss.on('connection', function (ws) {
-  clients.push(ws);
+  clients.push(Object.assign(ws,{userID: Date.now()}));
   let userName = false;
   let userColor = false;
   ws.on('message', function (msg) {
     if (!userName) {
       userName = msg;
       userColor = colors.shift();
-      ws.send(JSON.stringify({
-        type: 'color',
-        data: userColor
-      }));
+
+      for (let i = 0; i < clients.length; i++) {
+        clients[i].send(JSON.stringify({
+          type: 'connect_new_user',
+          userName,
+          userID: ws.userID
+        }));
+      }
       console.log(userName + ' login');
     } else {
       console.log(userName + ' say: ' + msg);

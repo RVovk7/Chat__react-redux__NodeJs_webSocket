@@ -1,43 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import UserItem from '../components/UserItem.jsx';
+import PeopleSearch from '../components/PeopleSearch.jsx'
 class PeopleList extends Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
-  
-    render() {
-        console.log(this.props.state.peopleReducer)
-        return (
 
-            <div className="people-list" id="people-list">
-                <div className="search">
-                    <input type="text" placeholder="search" />
-                    <i className="fa fa-search"></i>
-                </div>
+    render() {
+        return (
+            <div>
+                <PeopleSearch />
                 <ul className="list">
-                    { this.props.state.peopleReducer.map(p => {
-                        return <li key={p.name} className="clearfix">
-                            <img src={p.avatar} alt="avatar" />
-                            <div className="about">
-                                <div className="name">{p.name}</div>
-                                <div className="status">
-                                    <i className="fa fa-circle online"></i> online
-            </div>
-                            </div>
-                        </li>
-                    }) }
+                    {this.props.state.peopleReducer.map(p => {
+                        return (
+                            <UserItem key={p.userID} userName={p.userName} avatar={p.avatar} />
+                        )
+                    })}
 
                 </ul>
             </div>
         );
     }
 }
-
 const mapStateToProps = state => {
     console.log(state.peopleReducer)
     return {
-   state
+        state
     }
 }
 const mapDispatchToProps = dispatch => {

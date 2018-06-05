@@ -1,10 +1,40 @@
+import {connectNewUser} from '../actions'; 
+import store from '../store';
+
 export default ((wsUrl) => {
     let ws;
+    const {dispatch} = store
     ws = new WebSocket(wsUrl)
     ws.onopen = () => {
-console.log('webSocked open ')
+        console.log('webSocked open ')
+    }
+    ws.onmessage = m => {
+      const messObj = JSON.parse(m.data);
+      const {userName , userID} = messObj;
+     switch (messObj.type) {  
+         case 'connect_new_user':
+         console.log('dispatch',messObj)
+             dispatch(connectNewUser(userName , userID))
+             break;
+     
+         default:
+             break;
      }
-     ws.onmessage = m => {
-         console.log(m.data)
-     }
-})('ws://localhost:3000')
+    }
+    let contReconnect = 0;
+    const emit = message => {
+        if (contReconnect > 5 ) return 
+        if (ws.readyState === ws.CONNECTING){
+            setTimeout(()=>{
+                emit(message)
+                contReconnect++
+            },500)
+            return
+        }
+        ws.send(message);
+        contReconnect = 0;
+    }
+    return {
+        emit
+    }
+})('ws://localhost:3000');

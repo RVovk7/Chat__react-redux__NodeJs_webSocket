@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "w": "webpack-dev-server --colors --progress"
+    "w": "webpack-dev-server --hot --colors --progress"
   },
   "author": "Wolf",
   "license": "ISC",
@@ -39,6 +39,7 @@
     "@babel/plugin-transform-react-jsx": "^7.0.0-beta.49",
     "babel-preset-env": "^1.7.0",
     "eslint-plugin-babel": "^5.1.0",
+    "keymirror": "^0.1.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",

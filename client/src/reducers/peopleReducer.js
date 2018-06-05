@@ -25,12 +25,14 @@ const initState = [{
 ]
 
 ;
-
-const peopleReducer = (state = initState, action) => {
-    if (action.type === 'ADD_NEW_USER') {
+import constants from '../constants';
+const peopleReducer = (state = [], action) => {
+    if (action.type === constants.CONNECTED_NEW_USER) {
+        const {userName, userID} = action
         return state.concat({
-            name: 'Linda',
-            avatar: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_06.jpg'
+            userName,
+            avatar: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01.jpg',
+            userID
         })
     }
     return state
