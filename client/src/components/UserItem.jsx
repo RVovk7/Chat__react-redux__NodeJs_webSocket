@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {Component} from 'react';
+
 
 const UserItem = (props) => (
-        <li key={props.key} className="clearfix">
+
+        <li key={props.userID} className="clearfix">
             <img src={props.avatar} alt="avatar" />
             <div className="about">
                 <div className="name">{props.userName}</div>
@@ -12,4 +14,4 @@ const UserItem = (props) => (
         </li>
     
 )
-export default UserItem;
+export default UserItem; 

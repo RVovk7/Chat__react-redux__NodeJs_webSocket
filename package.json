@@ -7,10 +7,11 @@
   "license": "MIT",
   "scripts": {
     "start:client": "cd client && yarn run w",
-    "start:server": "cd server && node app.js",
-    "start": "concurrently  \" yarn run start:server \" \" yarn run start:client \" "
+    "start:server": "cd server && nodemon app.js",
+    "start": "concurrently  \" yarn run start:server  \" \" yarn run start:client \" "
   },
   "dependencies": {
     "concurrently": "^3.5.1"
+
   }
 }

@@ -14,6 +14,7 @@ const webpackConfig = {
 		path: path.resolve(__dirname, './dist'),
 		filename: '[name].js'
 	},
+	mode: 'development',
 	module: {
 		rules: [
 		
@@ -74,4 +75,4 @@ const webpackConfig = {
 	}
 }
 
-module.exports = webpackConfig
+module.exports = webpackConfig;

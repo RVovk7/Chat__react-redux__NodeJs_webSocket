@@ -27,14 +27,27 @@ const initState = [{
 ;
 import constants from '../constants';
 const peopleReducer = (state = [], action) => {
-    if (action.type === constants.CONNECTED_NEW_USER) {
-        const {userName, userID} = action
-        return state.concat({
-            userName,
-            avatar: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_01.jpg',
-            userID
-        })
+    const {
+        userName,
+        userID,
+        type
+    } = action;
+    switch (type) {
+        case constants.CONNECTED_NEW_USER:
+            return state.concat({
+                userName,
+                avatar: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_02.jpg',
+                userID
+            })
+            break;
+        case constants.DISCONNECT_NEW_USER:
+return state.filter(u=> u.userID !==userID )
+
+        default:
+            return state
+            break;
     }
-    return state
+
+
 };
 export default peopleReducer;

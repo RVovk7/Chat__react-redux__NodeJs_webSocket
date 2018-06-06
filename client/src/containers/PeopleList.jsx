@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import UserItem from '../components/UserItem.jsx';
-import PeopleSearch from '../components/PeopleSearch.jsx'
+import PeopleSearch from '../components/PeopleSearch.jsx';
 class PeopleList extends Component {
     constructor(props) {
         super(props);
@@ -10,7 +10,7 @@ class PeopleList extends Component {
 
     render() {
         return (
-            <div>
+            <div className='wolf7'>
                 <PeopleSearch />
                 <ul className="list">
                     {this.props.state.peopleReducer.map(p => {
@@ -25,7 +25,6 @@ class PeopleList extends Component {
     }
 }
 const mapStateToProps = state => {
-    console.log(state.peopleReducer)
     return {
         state
     }

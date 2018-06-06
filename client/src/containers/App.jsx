@@ -3,7 +3,7 @@ import '../styles/main.scss';
 import { Provider } from 'react-redux';
 import ChatWrap from './ChatWrap.jsx';
 import store from '../store';
-import { hot } from 'react-hot-loader'
+//import {hot}from 'react-hot-loader';
 localStorage.removeItem('auth'); 
 
 const App = () => <Provider store={store}>
@@ -13,4 +13,4 @@ const App = () => <Provider store={store}>
 </Provider>
 
 
-export default App;
+export default (App);

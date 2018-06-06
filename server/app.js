@@ -9,16 +9,16 @@ let wss = new WebSocketServer({
   server: server
 });
 let colors = ['red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange'];
-colors.sort(function (a, b) {
-  return Math.random() > 0.5;
-});
+colors.sort((a, b) => Math.random() > 0.5);
 let clients = [];
 
-wss.on('connection', function (ws) {
-  clients.push(Object.assign(ws,{userID: Date.now()}));
+wss.on('connection', ws => {
+  clients.push(Object.assign(ws, {
+    userID: Date.now()
+  }));
   let userName = false;
   let userColor = false;
-  ws.on('message', function (msg) {
+  ws.on('message', msg => {
     if (!userName) {
       userName = msg;
       userColor = colors.shift();
@@ -48,17 +48,25 @@ wss.on('connection', function (ws) {
       }
     }
   });
-  ws.on('close', function () {
+  ws.on('close', () => {
     let index = clients.indexOf(ws);
+    console.log(ws.userID);
     clients.splice(index, 1);
     if (userName !== false && userColor != false) {
       colors.push(userColor);
+    }
+    let json = JSON.stringify({
+      type: 'disconnect_user',
+      userID: ws.userID
+    });
+    for (let i = 0; i < clients.length; i++) {
+      clients[i].send(json);
     }
   });
 
 });
 
-app.configure(function () {
+app.configure(() => {
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.use(express.favicon());
@@ -73,10 +81,10 @@ app.configure('development', function () {
   app.use(express.errorHandler());
 });
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendfile('views/chat.html');
 });
 
-server.listen(app.get('port'), function () {
+server.listen(app.get('port'), () => {
   console.log("Express server listening on port " + app.get('port'));
 });
