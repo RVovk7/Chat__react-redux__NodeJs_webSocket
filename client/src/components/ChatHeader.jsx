@@ -8,7 +8,7 @@ export default class ChatHeader extends Component {
 
             <div className="chat-about">
                 <div className="chat-with">Chat </div>
-                <div className="chat-num-messages">already 1  message</div>
+                <div className="chat-num-messages">already {this.props.messageCount}  message</div>
             </div>
             <i className="fa fa-star"></i>
         </div>

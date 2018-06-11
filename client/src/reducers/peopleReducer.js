@@ -27,26 +27,27 @@ const initState = [{
 ;
 import constants from '../constants';
 const peopleReducer = (state = [], action) => {
-    console.log("ACTION=>",action)
+    console.log("ACTION=>", action)
     const {
         userName,
         userID,
-        type
+        type,
+        avatar
     } = action;
     switch (type) {
-          case constants.CLIENTS_LIST:
-          return action.data
-          break;
+        case constants.CLIENTS_LIST:
+            return action.data
+            break;
         case constants.CONNECTED_NEW_USER:
             return state.concat({
                 userName,
-                avatar: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_02.jpg',
+                avatar,
                 userID
             })
             break;
 
         case constants.DISCONNECT_NEW_USER:
-return state.filter(u=> u.userID !==userID )
+            return state.filter(u => u.userID !== userID)
 
         default:
             return state

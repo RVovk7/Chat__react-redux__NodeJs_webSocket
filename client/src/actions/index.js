@@ -1,10 +1,15 @@
 import constants from '../constants';
 export const connectNewUser = data => {
-    const {userName,userID}= data
+    const {
+        userName,
+        userID,
+        avatar
+    } = data
     return {
         type: constants.CONNECTED_NEW_USER,
         userName,
-        userID
+        userID,
+        avatar
     }
 
 };
@@ -15,10 +20,10 @@ export const disconnectNewUser = userID => {
     }
 }
 export const clientsList = data => {
-   return {
+    return {
         type: constants.CLIENTS_LIST,
-      data:data
-    } 
+        data: data
+    }
 }
 export const newMessage = data => {
     const {

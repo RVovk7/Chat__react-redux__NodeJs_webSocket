@@ -16,8 +16,6 @@ wss.on('connection', ws => {
   clients.push(Object.assign(ws, {
     userID: Date.now()
   }));
-  let userName = false;
-  let userColor = false;
 
   ws.on('message', msg => {
     const fromClient = JSON.parse(msg);
@@ -25,11 +23,16 @@ wss.on('connection', ws => {
       case 'userMSG':
         userName = fromClient.name;
         userColor = colors.shift();
-
+        const avatar = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0${Math.floor(Math.random() * 9)+1}.jpg`;
+        const sData = {
+          userName,
+          userID: ws.userID,
+          avatar
+        }
         clientsList.push({
           userName,
           userID: ws.userID,
-          avatar: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_02.jpg'
+          avatar
         });
         ///send to current
         ws.send(JSON.stringify({
@@ -41,17 +44,19 @@ wss.on('connection', ws => {
           clients[i].send(JSON.stringify({
             type: 'connect_new_user',
             userName,
-            userID: ws.userID
+            avatar,
+            userID: ws.userID,
+            
           }));
         }
         console.log(userName + ' login');
         break;
       case 'textMSG':
-        console.log(userName + ' say: ' + msg);
+        console.log(userName + ' say: ' + fromClient.data);
         let obj = {
           time: (new Date()).getTime(),
-          text: msg,
-          author: userName,
+          text: fromClient.text,
+          author: fromClient.author,
           color: userColor
         };
         let json = JSON.stringify({
