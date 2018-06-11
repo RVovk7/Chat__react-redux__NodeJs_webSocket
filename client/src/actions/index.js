@@ -14,6 +14,12 @@ export const disconnectNewUser = userID => {
         userID
     }
 }
+export const clientsList = data => {
+   return {
+        type: constants.CLIENTS_LIST,
+      data:data
+    } 
+}
 export const newMessage = data => {
     const {
         time,

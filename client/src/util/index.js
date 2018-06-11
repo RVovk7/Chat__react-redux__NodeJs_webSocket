@@ -1,7 +1,8 @@
 import {
     connectNewUser,
     disconnectNewUser,
-    newMessage
+    newMessage,
+    clientsList
 } from '../actions';
 import store from '../store';
 
@@ -27,12 +28,16 @@ export default ((wsUrl) => {
             case 'message':
                 dispatch(newMessage(messObj.data))
                 break;
+                case 'clientsList':
+              if (messObj.length !== 0)  dispatch(clientsList(messObj.data))
+                break;
             default:
                 break;
         }
     }
     let contReconnect = 0;
     const emit = message => {
+  
         if (contReconnect > 5) return
         if (ws.readyState === ws.CONNECTING) {
             setTimeout(() => {
@@ -41,7 +46,7 @@ export default ((wsUrl) => {
             }, 500)
             return
         }
-        ws.send(message);
+        ws.send(JSON.stringify(message));
         contReconnect = 0;
     }
     return {

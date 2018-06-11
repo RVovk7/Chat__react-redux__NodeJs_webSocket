@@ -27,12 +27,16 @@ const initState = [{
 ;
 import constants from '../constants';
 const peopleReducer = (state = [], action) => {
+    console.log("ACTION=>",action)
     const {
         userName,
         userID,
         type
     } = action;
     switch (type) {
+          case constants.CLIENTS_LIST:
+          return action.data
+          break;
         case constants.CONNECTED_NEW_USER:
             return state.concat({
                 userName,
@@ -40,6 +44,7 @@ const peopleReducer = (state = [], action) => {
                 userID
             })
             break;
+
         case constants.DISCONNECT_NEW_USER:
 return state.filter(u=> u.userID !==userID )
 

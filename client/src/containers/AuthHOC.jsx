@@ -9,7 +9,11 @@ export default (ChildComponent) => {
                 return false
             }
             localStorage.setItem('auth',name);
-            ws.emit(name);
+            const data = {
+                type : "userMSG",
+                name
+            }
+            ws.emit(data);
             return true;
         }
         noName() {
