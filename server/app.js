@@ -29,6 +29,7 @@ wss.on('connection', ws => {
           userID: ws.userID,
           avatar
         }
+       //console.log( ...clients);
         clientsList.push({
           userName,
           userID: ws.userID,
@@ -46,7 +47,6 @@ wss.on('connection', ws => {
             userName,
             avatar,
             userID: ws.userID,
-            
           }));
         }
         console.log(userName + ' login');
@@ -57,7 +57,7 @@ wss.on('connection', ws => {
           time: (new Date()).getTime(),
           text: fromClient.text,
           author: fromClient.author,
-          color: userColor
+          color: fromClient.color
         };
         let json = JSON.stringify({
           type: 'message',

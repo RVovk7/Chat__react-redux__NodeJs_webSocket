@@ -4,6 +4,10 @@ import ChatHeader from '../components/ChatHeader.jsx';
 import MessageItem from '../components/MessageItem.jsx';
 import ChatControl from '../components/ChatControl.jsx';
 import ws from '../util';
+let colors = ['red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange'];
+colors.sort((a, b) => Math.random() > 0.5);
+sessionStorage.setItem('userColor',colors.shift());
+colors.push(sessionStorage.getItem('userColor'));
 class MessageList extends Component {
     constructor(props) {
         super(props);
@@ -22,10 +26,14 @@ class MessageList extends Component {
         };
     }
     sendClick = e => {
+    
         ws.emit({
             type: "textMSG",
             text: this.textSendRef.current.value,
-            author: this.props.people[this.props.people.length-1].userName
+            author: sessionStorage.getItem('auth'),
+            color: sessionStorage.getItem('userColor')
+            
+            
         });
     }
     render() {

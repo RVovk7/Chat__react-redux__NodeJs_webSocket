@@ -3,16 +3,15 @@ import ws from '../util';
 export default (ChildComponent) => {
     return class AuthHOC extends Component {
         auth() {
-            if( localStorage.getItem('auth')) return true;
             let name = prompt('Enter your name');
             if (!name || !name.trim().length) {
                 return false
             }
-            localStorage.setItem('auth',name);
+            sessionStorage.setItem('auth',name);
             const data = {
                 type : "userMSG",
                 name
-            }
+            };
             ws.emit(data);
             return true;
         }
