@@ -1,17 +1,47 @@
-﻿let express = require('express'),
+﻿const express = require('express'),
   http = require('http'),
-  path = require('path');
-
-let app = express();
-let server = http.createServer(app);
-let WebSocketServer = require('ws').Server;
-let wss = new WebSocketServer({
-  server: server
-});
-let colors = ['red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange'];
-colors.sort((a, b) => Math.random() > 0.5);
+  path = require('path'),
+  mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:3001')
+  .then(() => console.log('DB running'))
+  .catch((e) => {
+    console.error(`DB fail: ${e}`)
+  });
+const app = express(),
+  server = http.createServer(app),
+  WebSocketServer = require('ws').Server,
+  wss = new WebSocketServer({
+    server: server
+  });
+  const UserProfileSchema = {
+    firstName: String,
+    lastName: String,
+  };
+  
+  const UserServicesSchema ={
+    password: {
+      bcrypt: String,
+    },
+    google: {
+      fullName: String,
+      accessToken: String,
+      refreshToken: String,
+    },
+  };
+  
+  const UserSchema = new mongoose.Schema({
+    username: { type: String, required: true, lowercase: true, trim: true, minlength: 3 },
+    age: { type: Number, min: 0, max: 100 },
+    dateOfBirth: Date,
+    createdAt: { type: Date, default: new Date() },
+    tags: [String],
+    profile: UserProfileSchema,
+    services: { type: UserServicesSchema },
+    _id: mongoose.Schema.Types.ObjectId,
+  });
 let clients = [];
 let clientsList = [];
+///////WebSocet
 wss.on('connection', ws => {
   clients.push(Object.assign(ws, {
     userID: Date.now()
@@ -22,14 +52,13 @@ wss.on('connection', ws => {
     switch (fromClient.type) {
       case 'userMSG':
         userName = fromClient.name;
-        userColor = colors.shift();
         const avatar = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0${Math.floor(Math.random() * 9)+1}.jpg`;
         const sData = {
           userName,
           userID: ws.userID,
           avatar
         }
-       //console.log( ...clients);
+        //console.log( ...clients);
         clientsList.push({
           userName,
           userID: ws.userID,
@@ -71,12 +100,7 @@ wss.on('connection', ws => {
   });
   ws.on('close', () => {
     let index = clients.indexOf(ws);
-
     clients.splice(index, 1);
-    if (userName !== false && userColor != false) {
-      colors.push(userColor);
-    }
-
     let json = JSON.stringify({
       type: 'disconnect_user',
       userID: ws.userID
