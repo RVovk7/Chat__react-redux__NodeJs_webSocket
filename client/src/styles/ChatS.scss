@@ -4,18 +4,7 @@ $green: #86BB71;
 $blue: #94C2ED;
 $orange: #E38968;
 $gray: #92959E;
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
 
-body {
-  background: #C5DDEB;
-  font: 14px/20px "Lato", Arial, sans-serif;
-  padding: 40px 0;
-  color: white;
-}
 
 .container {
   margin: 0 auto;
@@ -24,7 +13,7 @@ body {
   border-radius: 5px;
 }
 .list{
-  float: left;
+  float: left!important;
 }
 .wolf7{
   display:flex;
@@ -35,7 +24,13 @@ body {
   width: 260px;
   float: left;
   .search {
+    display: flex;
     padding: 20px;
+    .fa-search {
+      margin-top:17px;
+      left: -25px;
+      position: relative;
+     
   }
   input {
     border-radius: 3px;
@@ -46,9 +41,7 @@ body {
     width: 90%;
     font-size: 14px;
   }
-  .fa-search {
-    position: relative;
-    left: -25px;
+  
   }
   ul {
     padding: 20px;

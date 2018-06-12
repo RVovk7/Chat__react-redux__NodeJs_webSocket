@@ -31,9 +31,7 @@ class MessageList extends Component {
             type: "textMSG",
             text: this.textSendRef.current.value,
             author: sessionStorage.getItem('auth'),
-            color: sessionStorage.getItem('userColor')
-            
-            
+            color: sessionStorage.getItem('userColor')   
         });
     }
     render() {
