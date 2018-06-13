@@ -18,6 +18,7 @@ class PeopleList extends Component {
                             <UserItem key={p.userID} userName={p.userName} avatar={p.avatar} />
                         )
                     })}
+
                 </ul>
             </div>
         );

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import ChatWrap from './ChatWrap.jsx';
 import ws from '../util';
-import Modal from 'react-modal';
- const authME = (ChildComponent) => {
-    return class AuthHOC extends Component {
+import { connect } from 'react-redux';
+
+   class Login extends Component {
         constructor(props) {
             super(props)
             this.state = {
@@ -28,6 +29,7 @@ import Modal from 'react-modal';
                     isLogged: true
                 })
                 ws.emit(data);
+                
             }
 
         }
@@ -42,6 +44,11 @@ import Modal from 'react-modal';
                 this.authEmail.value= ''
               this.authPass.value = ''
             ws.emit(authData);
+         setTimeout(() => {
+            this.setState({
+                isRegister: this.props.isReg
+            })
+         }, 200); 
         }
         singClick = () => {
 
@@ -83,9 +90,11 @@ import Modal from 'react-modal';
                         </div>
                         <div className="form sign-up">
                             <h2>Time to feel like home,</h2>
+                            
                             <label>
+                          
                                 <span>Login</span>
-                                <input type="text" ref={input => this.authLogin = input} />
+                                <input type="text"  ref={input => this.authLogin = input} />
                             </label>
                             <label>
                                 <span>Email</span>
@@ -104,9 +113,20 @@ import Modal from 'react-modal';
         }
         render() {
             return (
-                this.state.isLogged ? <ChildComponent /> : this.registr()
+                this.state.isLogged ? <ChatWrap /> : this.registr()
             )
         }
+        
+    }
+   
+
+const mapStateToProps = state => {
+    //console.log('LoginMapState',state)
+    return {
+       isReg : state.regReducer
     }
 }
-export default authME;
+const mapDispatchToProps = dispatch => {
+    return { dispatch };
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Login);
