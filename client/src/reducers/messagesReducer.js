@@ -1,6 +1,5 @@
 import constants from '../constants';
 const messagesReducer = (state = [], action) => {
-    console.log(action)
   
     switch (action.type) {
         

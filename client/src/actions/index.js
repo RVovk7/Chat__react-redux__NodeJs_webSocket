@@ -40,3 +40,9 @@ export const newMessage = data => {
         color
     }
 }
+export const isReg = data => {
+    return {
+        type: constants.IS_REG,
+        regStatus: data.regStatus
+    }
+}

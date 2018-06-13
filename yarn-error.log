@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js run start:client
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js run start:db
 
 PATH: 
   /Users/romanvovk/Sites/redux/chatV2/node_modules/.bin:/Users/romanvovk/.config/yarn/link/node_modules/.bin:/Users/romanvovk/Sites/redux/chatV2/node_modules/.bin:/Users/romanvovk/.config/yarn/link/node_modules/.bin:/usr/local/libexec/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/lib/node_modules/npm/bin/node-gyp-bin:/usr/local/bin/node_modules/npm/bin/node-gyp-bin:/Users/romanvovk/.rvm/gems/ruby-2.3.0/bin:/Users/romanvovk/.rvm/gems/ruby-2.3.0@global/bin:/Users/romanvovk/.rvm/rubies/ruby-2.3.0/bin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/romanvovk/.rvm/gems/ruby-2.3.0/bin:/Users/romanvovk/.rvm/gems/ruby-2.3.0@global/bin:/Users/romanvovk/.rvm/rubies/ruby-2.3.0/bin:/usr/local/sbin:/Users/romanvovk/.rvm/bin
@@ -127,9 +127,9 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 1
+  Exit code: 100
   Command: sh
-  Arguments: -c cd client && yarn run w
+  Arguments: -c cd server && mongod --dbpath data/db --port 3001
   Directory: /Users/romanvovk/Sites/redux/chatV2
   Output:
   

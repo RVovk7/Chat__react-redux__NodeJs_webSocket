@@ -2,8 +2,8 @@
   http = require('http'),
   path = require('path'),
   mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:3001')
-  .then(() => console.log('DB running'))
+mongoose.connect('mongodb://localhost:3001/chatDB')
+  .then(() => console.log('DB running on port 3001'))
   .catch((e) => {
     console.error(`DB fail: ${e}`)
   });
@@ -13,32 +13,22 @@ const app = express(),
   wss = new WebSocketServer({
     server: server
   });
-  const UserProfileSchema = {
-    firstName: String,
-    lastName: String,
-  };
-  
-  const UserServicesSchema ={
-    password: {
-      bcrypt: String,
-    },
-    google: {
-      fullName: String,
-      accessToken: String,
-      refreshToken: String,
-    },
-  };
-  
-  const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, lowercase: true, trim: true, minlength: 3 },
-    age: { type: Number, min: 0, max: 100 },
-    dateOfBirth: Date,
-    createdAt: { type: Date, default: new Date() },
-    tags: [String],
-    profile: UserProfileSchema,
-    services: { type: UserServicesSchema },
-    _id: mongoose.Schema.Types.ObjectId,
-  });
+
+
+const regSchema = new mongoose.Schema({
+  login: {
+    type: String,
+    required: true,
+    lowercase: true,
+    trim: true,
+    minlength: 3
+  },
+  email: String,
+  pass: String
+});
+const userDB = mongoose.model('userDB', regSchema);
+
+
 let clients = [];
 let clientsList = [];
 ///////WebSocet
@@ -46,10 +36,11 @@ wss.on('connection', ws => {
   clients.push(Object.assign(ws, {
     userID: Date.now()
   }));
-
   ws.on('message', msg => {
     const fromClient = JSON.parse(msg);
+
     switch (fromClient.type) {
+
       case 'userMSG':
         userName = fromClient.name;
         const avatar = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0${Math.floor(Math.random() * 9)+1}.jpg`;
@@ -81,7 +72,7 @@ wss.on('connection', ws => {
         console.log(userName + ' login');
         break;
       case 'textMSG':
-        console.log(userName + ' say: ' + fromClient.data);
+        console.log(userName + ' say: ' + fromClient.text);
         let obj = {
           time: (new Date()).getTime(),
           text: fromClient.text,
@@ -95,6 +86,40 @@ wss.on('connection', ws => {
         for (let i = 0; i < clients.length; i++) {
           clients[i].send(json);
         }
+        break;
+      case 'auth':
+        delete fromClient.type;
+        console.log('authFromClient', fromClient);
+        const runDB = async () => {
+          try {
+            userDB.find({
+                login: fromClient.login
+              })
+              .then(u => {
+
+                if (u.length === 0) {
+                  userDB.create(fromClient);
+                  ws.send(JSON.stringify({
+                    type: 'regStatus',
+                    regStatus: true
+                  }));
+
+                } else {
+                  ws.send(JSON.stringify({
+                    type: 'regStatus',
+                    regStatus: false
+                  }));
+                }
+
+
+              });
+
+          } catch (error) {
+            console.error(error);
+          }
+        }
+
+        runDB();
         break;
     }
   });

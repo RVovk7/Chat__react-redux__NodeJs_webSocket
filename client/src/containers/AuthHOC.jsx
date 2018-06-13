@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import ws from '../util';
 import Modal from 'react-modal';
-export default (ChildComponent) => {
+ const authME = (ChildComponent) => {
     return class AuthHOC extends Component {
         constructor(props) {
             super(props)
             this.state = {
-                isLogged: false
+                isLogged: false,
+                isRegister : false
             }
         }
         keyPress = e => {
-if (e.keyCode === 13) this.auth();
-if (e.keyCode ===27) this.input.value = '';
+            if (e.keyCode === 13) this.authClick();
+            if (e.keyCode === 27) this.uName.value = '';
         }
-        auth = () => {
-            let name = this.input.value;
-
-
+        authClick = () => {
+            let name = this.uName.value;
 
             sessionStorage.setItem('auth', name);
             const data = {
@@ -32,30 +31,39 @@ if (e.keyCode ===27) this.input.value = '';
             }
 
         }
+        regClick = () => {
+            const authData = {
+                type: 'auth',
+                login: this.authLogin.value,
+                email: this.authEmail.value,
+                pass: this.authPass.value
+            }
+            this.authLogin.value = ''
+                this.authEmail.value= ''
+              this.authPass.value = ''
+            ws.emit(authData);
+        }
         singClick = () => {
+
+
             document.querySelector('.cont').classList.toggle('s--signup');
         }
-        noName() {
-            return <div classNameName="noName">
-                You didn`t enter name :c
-                <button onClick={() => { location.reload() }}>Try again</button>
-            </div>
-        }
+
         registr() {
             return (
                 <div className="cont">
                     <div className="form sign-in">
                         <h2>Welcome back,</h2>
                         <label>
-                            <span>Name</span>
-                            <input onKeyDown={this.keyPress} ref={input => this.input = input} type="name" />
+                            <span>Login</span>
+                            <input onKeyDown={this.keyPress} ref={input => this.uName = input} type="name" />
                         </label>
-                        {/*  <label>
+                        <label >
                             <span>Password</span>
                             <input type="password" />
-                        </label> */}
+                        </label>
                         <p className="forgot-pass">Forgot password?</p>
-                        <button type="button" onClick={this.auth} className="submit">Sign In</button>
+                        <button type="button" onClick={this.authClick} className="submit">Sign In</button>
                         <button type="button" className="fb-btn">Connect with <span>facebook</span></button>
                     </div>
                     <div className="sub-cont">
@@ -76,18 +84,18 @@ if (e.keyCode ===27) this.input.value = '';
                         <div className="form sign-up">
                             <h2>Time to feel like home,</h2>
                             <label>
-                                <span>Name</span>
-                                <input type="text" />
+                                <span>Login</span>
+                                <input type="text" ref={input => this.authLogin = input} />
                             </label>
                             <label>
                                 <span>Email</span>
-                                <input type="email" />
+                                <input type="email" ref={input => this.authEmail = input} />
                             </label>
-                            {/*  <label>
+                            <label >
                                 <span>Password</span>
-                                <input type="password" />
-                            </label> */}
-                            <button type="button" className="submit">Sign Up</button>
+                                <input type="password" ref={input => this.authPass = input} />
+                            </label>
+                            <button type="button" onClick={this.regClick} className="submit">Sign Up</button>
                             <button type="button" className="fb-btn">Join with <span>facebook</span></button>
                         </div>
                     </div>
@@ -101,3 +109,4 @@ if (e.keyCode ===27) this.input.value = '';
         }
     }
 }
+export default authME;

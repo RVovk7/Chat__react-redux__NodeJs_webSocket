@@ -2,7 +2,8 @@ import {
     connectNewUser,
     disconnectNewUser,
     newMessage,
-    clientsList
+    clientsList,
+    isReg
 } from '../actions';
 import store from '../store';
 
@@ -27,6 +28,10 @@ export default ((wsUrl) => {
                 break;
             case 'message':
                 dispatch(newMessage(messObj.data))
+                break;
+                case 'regStatus':
+               
+                dispatch(isReg(messObj))
                 break;
                 case 'clientsList':
               if (messObj.length !== 0)  dispatch(clientsList(messObj.data))
