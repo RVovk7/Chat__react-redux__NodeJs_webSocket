@@ -11,7 +11,7 @@ class LoginPage extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(nextProps);
+
         if (nextProps.isReg !== null) {
             return {
                 regSucces: nextProps.isReg
@@ -30,7 +30,7 @@ class LoginPage extends Component {
     authClick = () => {
         if (this.state.isAuth === '-') {
             this.logFail.style.visibility = 'visible';
-            console.log('LOGINPAGE=>Cliked',);
+           
             setTimeout(() => {
                 this.logFail.style.visibility = 'hidden'
             }, 2000);
@@ -41,22 +41,21 @@ class LoginPage extends Component {
         this.classToggle.classList.toggle('s--signup');
     };    
     regStatusClick = status => {
-       console.log('LOGINPAGE=>regStatusClick',this.state.regSucces);
-        if (status === '-') {
+        if (this.state.regSucces === '-') {
             this.regStatus.innerHTML =   "Login is already exist";
             this.regStatus.style.color = 'red';
             this.regStatus.style.visibility = 'visible';
             setTimeout(() => {
-                this.logFail.style.visibility = 'hidden';
+                this.regStatus.style.visibility = 'hidden';
                
             }, 777);
         }
-        if (status === '+') {
+        if (this.state.regSucces === '+') {
             this.regStatus.innerHTML = 'registration is Successful';
             this.regStatus.style.color = 'green';
             this.regStatus.style.visibility = 'visible';
             setTimeout(() => {
-                this.logFail.style.visibility = 'hidden';
+                this.regStatus.style.visibility = 'hidden';
                 this.singClick()
             }, 777);
         }
@@ -65,7 +64,7 @@ class LoginPage extends Component {
             this.regStatus.style.color = 'red';
             this.regStatus.style.visibility = 'visible';
             setTimeout(() => {
-                this.logFail.style.visibility = 'hidden';
+                this.regStatus.style.visibility = 'hidden';
             }, 777);
         }
         
@@ -79,11 +78,6 @@ class LoginPage extends Component {
 
 
 render() {
-  /*   if (this.state.regSucces !== null) {
-        this.state.regSucces == '+' ? alert('Registration succes') : alert("User with this login is already registred")
-        window.location.reload();
-    } */
-
     return (
         <div ref={div => this.classToggle = div} className="cont">
             <div className="form sign-in">
@@ -140,5 +134,4 @@ render() {
     );
 }
 }
-
 export default LoginPage;
