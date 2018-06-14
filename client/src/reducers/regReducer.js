@@ -1,5 +1,5 @@
 import constants from '../constants';
-const regReducer = (state = [], action) => {
+const regReducer = (state = null, action) => {
     const {
         type,
         regStatus
@@ -9,6 +9,7 @@ const regReducer = (state = [], action) => {
             return regStatus
             
             break;
+
         default:
             return state
             break;

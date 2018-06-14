@@ -3,7 +3,8 @@ import {
     disconnectNewUser,
     newMessage,
     clientsList,
-    isReg
+    isReg,
+    isAuth
 } from '../actions';
 import store from '../store';
 
@@ -18,7 +19,7 @@ export default ((wsUrl) => {
     }
     ws.onmessage = m => {
         const messObj = JSON.parse(m.data);
-
+console.log('FROM_SERVER=>',messObj)
         switch (messObj.type) {
             case 'connect_new_user':
                 dispatch(connectNewUser(messObj))
@@ -33,8 +34,11 @@ export default ((wsUrl) => {
                
                 dispatch(isReg(messObj))
                 break;
+                case 'isAuth':
+               dispatch(isAuth(messObj))
+                break;
                 case 'clientsList':
-              if (messObj.length !== 0)  dispatch(clientsList(messObj.data))
+                dispatch(clientsList(messObj.data))
                 break;
             default:
                 break;

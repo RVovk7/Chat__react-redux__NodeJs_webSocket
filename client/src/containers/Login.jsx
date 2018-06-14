@@ -1,132 +1,120 @@
 import React, { Component } from 'react';
 import ChatWrap from './ChatWrap.jsx';
+import LoginPage from '../components/LoginPage.jsx';
 import ws from '../util';
 import { connect } from 'react-redux';
 
-   class Login extends Component {
-        constructor(props) {
-            super(props)
-            this.state = {
-                isLogged: false,
-                isRegister : false
-            }
+class Login extends Component {
+    constructor(props) {
+        super(props)
+        this.uName = React.createRef();
+        this.uPass = React.createRef();
+        this.authLogin = React.createRef();
+        this.authEmail = React.createRef();
+        this.authPass = React.createRef();
+        this.state = {
+            isLogged: false,
+            isReg: false
         }
-        keyPress = e => {
-            if (e.keyCode === 13) this.authClick();
-            if (e.keyCode === 27) this.uName.value = '';
-        }
-        authClick = () => {
-            let name = this.uName.value;
-
-            sessionStorage.setItem('auth', name);
-            const data = {
-                type: "userMSG",
-                name
-            };
-
-            if (name.trim()) {
-                this.setState({
-                    isLogged: true
-                })
-                ws.emit(data);
-                
-            }
-
-        }
-        regClick = () => {
-            const authData = {
-                type: 'auth',
-                login: this.authLogin.value,
-                email: this.authEmail.value,
-                pass: this.authPass.value
-            }
-            this.authLogin.value = ''
-                this.authEmail.value= ''
-              this.authPass.value = ''
-            ws.emit(authData);
-         setTimeout(() => {
-            this.setState({
-                isRegister: this.props.isReg
-            })
-         }, 200); 
-        }
-        singClick = () => {
-
-
-            document.querySelector('.cont').classList.toggle('s--signup');
-        }
-
-        registr() {
-            return (
-                <div className="cont">
-                    <div className="form sign-in">
-                        <h2>Welcome back,</h2>
-                        <label>
-                            <span>Login</span>
-                            <input onKeyDown={this.keyPress} ref={input => this.uName = input} type="name" />
-                        </label>
-                        <label >
-                            <span>Password</span>
-                            <input type="password" />
-                        </label>
-                        <p className="forgot-pass">Forgot password?</p>
-                        <button type="button" onClick={this.authClick} className="submit">Sign In</button>
-                        <button type="button" className="fb-btn">Connect with <span>facebook</span></button>
-                    </div>
-                    <div className="sub-cont">
-                        <div className="img">
-                            <div className="img__text m--up">
-                                <h2>New here?</h2>
-                                <p>Sign up and discover great amount of new opportunities!</p>
-                            </div>
-                            <div className="img__text m--in">
-                                <h2>One of us?</h2>
-                                <p>If you already has an account, just sign in. We've missed you!</p>
-                            </div>
-                            <div onClick={this.singClick} className="img__btn">
-                                <span className="m--up">Sign Up</span>
-                                <span className="m--in">Sign In</span>
-                            </div>
-                        </div>
-                        <div className="form sign-up">
-                            <h2>Time to feel like home,</h2>
-                            
-                            <label>
-                          
-                                <span>Login</span>
-                                <input type="text"  ref={input => this.authLogin = input} />
-                            </label>
-                            <label>
-                                <span>Email</span>
-                                <input type="email" ref={input => this.authEmail = input} />
-                            </label>
-                            <label >
-                                <span>Password</span>
-                                <input type="password" ref={input => this.authPass = input} />
-                            </label>
-                            <button type="button" onClick={this.regClick} className="submit">Sign Up</button>
-                            <button type="button" className="fb-btn">Join with <span>facebook</span></button>
-                        </div>
-                    </div>
-                </div>
-            )
-        }
-        render() {
-            return (
-                this.state.isLogged ? <ChatWrap /> : this.registr()
-            )
-        }
-        
     }
-   
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.isAuth !== null) {
+            return {
+                isLogged: nextProps.isAuth
+            }
+        }
+        if (nextProps.isReg !== null) {
+            return {
+                isReg: nextProps.isReg
+            }
+        }
+        return null
+    }
+    keyPressReg = e => {
+        if (e.keyCode === 13) this.regClick();
+        if (e.keyCode === 27) {
+            this.authLogin.current.value = ''
+            this.authEmail.current.value = ''
+            this.authPass.current.value = ''
+        };
+    }
+    keyPressAuth = e => {
+        if (e.keyCode === 13) this.authClick();
+        if (e.keyCode === 27) {
+            this.uName.current.value = ''
+            this.uPass.current.value = ''
+        };
+    }
+    authClick = () => {
+        let name = this.uName.current.value;
+        let pass = this.uPass.current.value;
+        sessionStorage.setItem('auth', name);
+        const data = {
+            type: "userMSG",
+            name,
+            pass
+        };
+        ws.emit(data);
+        console.log('LOGIN=>this.state.isLogged', this.state.isLogged);
+        console.log('CHILD', this.child);
+        setTimeout(() => {
+            if (this.state.isLogged === '-') {
+                this.child.authClick();
+                this.uName.current.value = ''
+                this.uPass.current.value = ''
+                this.uName.current.focus()
+            }
+        }, 200);
+    }
+    regClick = () => {
+        let login= this.authLogin.current.value,
+        email= this.authEmail.current.value,
+        pass = this.authPass.current.value
+        const emailRegex = RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+     const  emailValid = emailRegex.test(email);
+    if(emailValid && login.trim() && pass.trim()){
+        const authData = {
+            type: 'auth',
+            login,
+            email,
+            pass
+        }
+        ws.emit(authData);
+    }
+    else{
+        this.child.regStatusClick('inputFail');
+                this.authLogin.current.value = ''
+                this.authEmail.current.value = ''
+                this.authPass.current.value = ''
+                this.authLogin.current.focus()  
+    }
+       
+        setTimeout(() => {
+            if (this.state.isReg !== null) {
+                this.child.regStatusClick(this.state.isReg);
+                this.authLogin.current.value = ''
+                this.authEmail.current.value = ''
+                this.authPass.current.value = ''
+                this.authLogin.current.focus()
+            }
+        }, 200);
 
+    }
+    render() {
+        return (
+            this.state.isLogged === '+' ? <ChatWrap /> : <LoginPage ref={instance => { this.child = instance; }} isLogged={this.state.isLogged} keyPressAuth={this.keyPressAuth} keyPressReg={this.keyPressReg} regClick={this.regClick} uName={this.uName} uPass={this.uPass} authClick={this.authClick} authLogin={this.authLogin} authEmail={this.authEmail} authPass={this.authPass} isReg={this.props.isReg} />
+        )
+    }
+
+}
 const mapStateToProps = state => {
-    //console.log('LoginMapState',state)
+    console.log('LoginMapState', state)
     return {
-       isReg : state.regReducer
+        isReg: state.regReducer,
+        isAuth: state.authReducer
     }
 }
 const mapDispatchToProps = dispatch => {
     return { dispatch };
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

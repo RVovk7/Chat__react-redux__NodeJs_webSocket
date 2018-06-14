@@ -9,11 +9,11 @@
   }
   
   $contW: 1000px;
-  $imgW: 260px;
+  $imgW: 300px;
   $formW: $contW - $imgW;
   $switchAT: 1.2s;
   
-  $inputW: 260px;
+  $inputW: 300px;
   $btnH: 36px;
   
   $diffRatio: ($contW - $imgW) / $contW;
@@ -34,7 +34,7 @@
     overflow: hidden;
     position: relative;
     width: $contW;
-    height: 550px;
+    height: 700px;
     margin: 0 auto 100px;
     background: #fff;
   }

@@ -4,5 +4,6 @@ export default keyMirror({
     DISCONNECT_NEW_USER: null,
     NEW_MESSAGE: null,
     CLIENTS_LIST:null,
-    IS_REG: null
+    IS_REG: null,
+    IS_AUTH:null
 })

@@ -49,17 +49,47 @@ wss.on('connection', ws => {
           userID: ws.userID,
           avatar
         }
+      
         //console.log( ...clients);
-        clientsList.push({
-          userName,
-          userID: ws.userID,
-          avatar
-        });
+       
         ///send to current
-        ws.send(JSON.stringify({
-          type: 'clientsList',
-          data: clientsList
-        }));
+     
+  
+      userDB.find({
+        login: userName,
+        pass : fromClient.pass
+      })
+      .then(u=>{
+       
+        if (u.length !==0 ){
+          ws.send(JSON.stringify({
+            type: 'isAuth',
+            isAuth : '+'
+          }));
+          clientsList.push({
+            userName,
+            userID: ws.userID,
+            avatar
+          });
+          ws.send(JSON.stringify({
+            type: 'clientsList',
+            data: clientsList
+          }));
+        }
+        else{
+          ws.send(JSON.stringify({
+            type: 'isAuth',
+            isAuth : '-'
+          }));
+        }
+      })
+      .catch(er => {
+        console.error(er);
+      })
+     
+    
+    
+   
         ///send to all except current client
         for (let i = 0; i < clients.length - 1; i++) {
           clients[i].send(JSON.stringify({
@@ -87,12 +117,12 @@ wss.on('connection', ws => {
           clients[i].send(json);
         }
         break;
-      case 'auth':
+       case 'auth':
         delete fromClient.type;
         console.log('authFromClient', fromClient);
         const runDB = async () => {
-          try {
-            userDB.find({
+        
+           await  userDB.find({
                 login: fromClient.login
               })
               .then(u => {
@@ -101,26 +131,24 @@ wss.on('connection', ws => {
                   userDB.create(fromClient);
                   ws.send(JSON.stringify({
                     type: 'regStatus',
-                    regStatus: true
+                    regStatus: "+"
                   }));
 
                 } else {
                   ws.send(JSON.stringify({
                     type: 'regStatus',
-                    regStatus: false
+                    regStatus: '-'
                   }));
                 }
 
 
               });
 
-          } catch (error) {
-            console.error(error);
-          }
+        
         }
 
         runDB();
-        break;
+        break; 
     }
   });
   ws.on('close', () => {
@@ -150,9 +178,9 @@ app.configure(() => {
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.configure('development', function () {
+ app.configure('development', function () {
   app.use(express.errorHandler());
-});
+}); 
 app.get('/', (req, res) => {
   res.sendfile('views/chat.html');
 });

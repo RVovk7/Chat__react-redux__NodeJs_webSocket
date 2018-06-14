@@ -22,7 +22,7 @@ export const disconnectNewUser = userID => {
 export const clientsList = data => {
     return {
         type: constants.CLIENTS_LIST,
-        data: data
+        data
     }
 }
 export const newMessage = data => {
@@ -45,4 +45,11 @@ export const isReg = data => {
         type: constants.IS_REG,
         regStatus: data.regStatus
     }
+}
+export const isAuth = data => {
+    console.log('actionIsAuth',data)
+   return {
+    type: constants.IS_AUTH,
+    isAuth : data.isAuth
+   } 
 }
