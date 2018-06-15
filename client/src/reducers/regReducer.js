@@ -1,12 +1,14 @@
 import constants from '../constants';
-const regReducer = (state = null, action) => {
+let count = 0;
+const regReducer = (state = '0', action) => {
     const {
         type,
         regStatus
     } = action;
+    count = Math.round(++count % 2);
     switch (type) {
         case constants.IS_REG:
-            return regStatus
+            return `${regStatus}${count}`;
             
             break;
 

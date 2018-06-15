@@ -1,9 +1,10 @@
 import constants from '../constants';
-export default (state =null, action) => {
-    console.log('authReducer',action)
+let count = 0;
+export default (state ='0', action) => {
+   count = Math.round(++count % 2);
     switch (action.type) {
         case constants.IS_AUTH: 
-            return action.isAuth
+            return `${action.isAuth}${count}`;
         default:
             return state;
     }

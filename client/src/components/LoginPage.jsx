@@ -1,34 +1,7 @@
 import React, { Component } from 'react'
 class LoginPage extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            regSucces: null,
-            isAuth: null
-        }
-  
-    
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-
-        if (nextProps.isReg !== null) {
-            return {
-                regSucces: nextProps.isReg
-            }
-        }
-        if (nextProps.isLogged !== null) {
-            return {
-                isAuth: nextProps.isLogged
-            }
-        }
-
-        else {
-            return null
-        }
-    }
     authClick = () => {
-        if (this.state.isAuth === '-') {
+        if (this.props.isLogged === '-') {
             this.logFail.style.visibility = 'visible';
            
             setTimeout(() => {
@@ -41,7 +14,7 @@ class LoginPage extends Component {
         this.classToggle.classList.toggle('s--signup');
     };    
     regStatusClick = status => {
-        if (this.state.regSucces === '-') {
+        if (this.props.isReg[0] === '-') {
             this.regStatus.innerHTML =   "Login is already exist";
             this.regStatus.style.color = 'red';
             this.regStatus.style.visibility = 'visible';
@@ -50,7 +23,7 @@ class LoginPage extends Component {
                
             }, 777);
         }
-        if (this.state.regSucces === '+') {
+        if (this.props.isReg[0] === '+') {
             this.regStatus.innerHTML = 'registration is Successful';
             this.regStatus.style.color = 'green';
             this.regStatus.style.visibility = 'visible';

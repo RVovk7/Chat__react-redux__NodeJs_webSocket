@@ -1,0 +1,22 @@
+{
+  "errors": [
+    "Entry module not found: Error: Can't resolve './src' in '/Users/romanvovk/Sites/redux/chatV2'\nresolve './src' in '/Users/romanvovk/Sites/redux/chatV2'\n  using description file: /Users/romanvovk/Sites/redux/chatV2/package.json (relative path: .)\n    Field 'browser' doesn't contain a valid alias configuration\n    using description file: /Users/romanvovk/Sites/redux/chatV2/package.json (relative path: ./src)\n      no extension\n        Field 'browser' doesn't contain a valid alias configuration\n        /Users/romanvovk/Sites/redux/chatV2/src doesn't exist\n      .wasm\n        Field 'browser' doesn't contain a valid alias configuration\n        /Users/romanvovk/Sites/redux/chatV2/src.wasm doesn't exist\n      .mjs\n        Field 'browser' doesn't contain a valid alias configuration\n        /Users/romanvovk/Sites/redux/chatV2/src.mjs doesn't exist\n      .js\n        Field 'browser' doesn't contain a valid alias configuration\n        /Users/romanvovk/Sites/redux/chatV2/src.js doesn't exist\n      .json\n        Field 'browser' doesn't contain a valid alias configuration\n        /Users/romanvovk/Sites/redux/chatV2/src.json doesn't exist\n      as directory\n        /Users/romanvovk/Sites/redux/chatV2/src doesn't exist"
+  ],
+  "warnings": [
+    "configuration\nThe 'mode' option has not been set. Set 'mode' option to 'development' or 'production' to enable defaults for this environment. "
+  ],
+  "version": "4.2.0",
+  "hash": "83b4e35644803d797ee8",
+  "time": 86,
+  "builtAt": 1529070374047,
+  "publicPath": "",
+  "outputPath": "/Users/romanvovk/Sites/redux/chatV2/dist",
+  "assetsByChunkName": {},
+  "assets": [],
+  "filteredAssets": 0,
+  "entrypoints": {},
+  "chunks": [],
+  "modules": [],
+  "filteredModules": 0,
+  "children": []
+}

@@ -139,6 +139,7 @@ wss.on('connection', ws => {
                     type: 'regStatus',
                     regStatus: '-'
                   }));
+                 
                 }
 
 

@@ -17,15 +17,15 @@ class Login extends Component {
             isReg: false
         }
     }
-    static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.isAuth !== null) {
+    static getDerivedStateFromProps(nextProps) {
+        if (nextProps.isAuth !== '0') {
             return {
-                isLogged: nextProps.isAuth
+                isLogged: nextProps.isAuth[0]
             }
         }
         if (nextProps.isReg !== null) {
             return {
-                isReg: nextProps.isReg
+                isReg: nextProps.isReg[0]
             }
         }
         return null
@@ -37,6 +37,16 @@ class Login extends Component {
             this.authEmail.current.value = ''
             this.authPass.current.value = ''
         };
+    }
+    componentDidUpdate() {
+        if (this.state.isLogged === '-' && this.state.isReg !== '-' && this.state.isReg !== '+') this.authFail();
+        if (this.state.isReg !== '0' && this.state.isLogged !== '-') {
+            this.child.regStatusClick(this.state.isReg);
+            this.authLogin.current.value = ''
+            this.authEmail.current.value = ''
+            this.authPass.current.value = ''
+            this.authLogin.current.focus()
+        }
     }
     keyPressAuth = e => {
         if (e.keyCode === 13) this.authClick();
@@ -55,60 +65,51 @@ class Login extends Component {
             pass
         };
         ws.emit(data);
-        console.log('LOGIN=>this.state.isLogged', this.state.isLogged);
-        console.log('CHILD', this.child);
-        setTimeout(() => {
-            if (this.state.isLogged === '-') {
-                this.child.authClick();
-                this.uName.current.value = ''
-                this.uPass.current.value = ''
-                this.uName.current.focus()
-            }
-        }, 200);
+
+    }
+    authFail = () => {
+        this.child.authClick();
+        this.uName.current.value = ''
+        this.uPass.current.value = ''
+        this.uName.current.focus()
     }
     regClick = () => {
-        let login= this.authLogin.current.value,
-        email= this.authEmail.current.value,
-        pass = this.authPass.current.value
+        let login = this.authLogin.current.value,
+            email = this.authEmail.current.value,
+            pass = this.authPass.current.value
         const emailRegex = RegExp('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
-     const  emailValid = emailRegex.test(email);
-    if(emailValid && login.trim() && pass.trim()){
-        const authData = {
-            type: 'auth',
-            login,
-            email,
-            pass
-        }
-        ws.emit(authData);
-    }
-    else{
-        this.child.regStatusClick('inputFail');
-                this.authLogin.current.value = ''
-                this.authEmail.current.value = ''
-                this.authPass.current.value = ''
-                this.authLogin.current.focus()  
-    }
-       
-        setTimeout(() => {
-            if (this.state.isReg !== null) {
-                this.child.regStatusClick(this.state.isReg);
-                this.authLogin.current.value = ''
-                this.authEmail.current.value = ''
-                this.authPass.current.value = ''
-                this.authLogin.current.focus()
+        const emailValid = emailRegex.test(email);
+        if (emailValid && login.trim() && pass.trim()) {
+            const authData = {
+                type: 'auth',
+                login,
+                email,
+                pass
             }
-        }, 200);
-
+            ws.emit(authData);
+        }
+        else {
+            this.child.regStatusClick('inputFail');
+            this.authLogin.current.value = ''
+            this.authEmail.current.value = ''
+            this.authPass.current.value = ''
+            this.authLogin.current.focus()
+        }
     }
     render() {
         return (
-            this.state.isLogged === '+' ? <ChatWrap /> : <LoginPage ref={instance => { this.child = instance; }} isLogged={this.state.isLogged} keyPressAuth={this.keyPressAuth} keyPressReg={this.keyPressReg} regClick={this.regClick} uName={this.uName} uPass={this.uPass} authClick={this.authClick} authLogin={this.authLogin} authEmail={this.authEmail} authPass={this.authPass} isReg={this.props.isReg} />
+            this.state.isLogged === '+' ? <ChatWrap /> : <LoginPage ref={instance => { this.child = instance; }}
+                isLogged={this.state.isLogged} keyPressAuth={this.keyPressAuth}
+                keyPressReg={this.keyPressReg} regClick={this.regClick}
+                uName={this.uName} uPass={this.uPass}
+                authClick={this.authClick} authLogin={this.authLogin}
+                authEmail={this.authEmail} authPass={this.authPass} isReg={this.props.isReg} />
         )
     }
 
 }
 const mapStateToProps = state => {
-    console.log('LoginMapState', state)
+
     return {
         isReg: state.regReducer,
         isAuth: state.authReducer
