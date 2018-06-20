@@ -5,3 +5,7 @@ const chatStore = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 export default chatStore;
+
+chatStore.subscribe(() => {
+    console.log(chatStore.getState());
+  });
