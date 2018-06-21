@@ -34,7 +34,7 @@ class Login extends Component {
         } else {
             return (
                 <Switch>
-                    <Route patch='/' render={() => (<LoginPage isReg={this.props.isReg} isAuth={this.state.isAuth} />)} />
+                    <Route patch='/' render={() => (<LoginPage isReg={this.props.isReg} isAuth={this.state.isAuth} />)} /> 
                 </Switch>
             )
         }

@@ -73,6 +73,7 @@ class LoginPage extends Component {
             name,
             pass
         };
+        
         ws.emit(data);
     }
     componentDidUpdate() {

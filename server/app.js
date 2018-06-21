@@ -14,7 +14,6 @@ const app = express(),
     server: server
   });
 
-
 const regSchema = new mongoose.Schema({
   login: {
     type: String,
@@ -86,10 +85,6 @@ wss.on('connection', ws => {
       .catch(er => {
         console.error(er);
       })
-     
-    
-    
-   
         ///send to all except current client
         for (let i = 0; i < clients.length - 1; i++) {
           clients[i].send(JSON.stringify({
@@ -133,19 +128,13 @@ wss.on('connection', ws => {
                     type: 'regStatus',
                     regStatus: "+"
                   }));
-
                 } else {
                   ws.send(JSON.stringify({
                     type: 'regStatus',
                     regStatus: '-'
                   }));
-                 
                 }
-
-
               });
-
-        
         }
 
         runDB();
@@ -164,8 +153,6 @@ wss.on('connection', ws => {
       clients[i].send(json);
     }
   });
-
-
 });
 
 app.configure(() => {
