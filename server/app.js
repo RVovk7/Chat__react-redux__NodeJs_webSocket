@@ -31,11 +31,11 @@ let userID;
 const userDB = mongoose.model('userDB', regSchema);
 ///////WebSocet
 wss.on('connection', ws => {
- userID = Date.now()
+  userID = Date.now()
   clients.push(Object.assign(ws, {
     userID
   }));
-  console.log('ws.userID',ws.userID)
+  console.log('ws.userID', ws.userID)
   ws.on('message', msg => {
     const fromClient = JSON.parse(msg);
 
@@ -43,12 +43,12 @@ wss.on('connection', ws => {
 
       case 'userMSG':
         userName = fromClient.name;
-      /*   const sData = {
-          userName,
-          userID: ws.userID,
-          avatar
-        }; */
-///send to all except current client
+          const sData = {
+            userName,
+            userID: ws.userID,
+            avatar
+          }; 
+        ///send to all except current client
         for (let i = 0; i < clients.length - 1; i++) {
           clients[i].send(JSON.stringify({
             type: 'connect_new_user',
@@ -118,15 +118,15 @@ app.post('/api/reg', (req, res) => {
 });
 
 app.post('/api/auth', (req, res) => {
-  userDB.find({
-      userName: req.body.login,
+  userDB.findOne({
+    login: req.body.userName,
       pass: req.body.pass
     })
     .then(u => {
       const avatar = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0${Math.floor(Math.random() * 9)+1}.jpg`;
-      if (u.length !== 0) {
+      if (u) {
         clientsList.push({
-          userName: req.body.login,
+          userName: u.login,
           userID: Date.now(),
           avatar
         });
@@ -136,7 +136,8 @@ app.post('/api/auth', (req, res) => {
         }));
       } else {
         res.send(JSON.stringify({
-          isAuth: false
+          isAuth: false,
+          clientsList: false
         }));
       }
     })

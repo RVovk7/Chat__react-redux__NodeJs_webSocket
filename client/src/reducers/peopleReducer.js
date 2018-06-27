@@ -8,7 +8,9 @@ const peopleReducer = (state = [], action) => {
     } = action;
     switch (type) {
         case constants.CLIENTS_LIST:
-        console.error('peopleReducer',action)
+        console.info('peopleReducer=>CLIENT_LIST', userName,
+        userID,
+        avatar);
             return action.data
             break;
         case constants.CONNECTED_NEW_USER:

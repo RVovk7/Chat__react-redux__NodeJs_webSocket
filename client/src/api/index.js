@@ -27,12 +27,13 @@ export default {
             })
         .then(res => res.json())
         .then(data => {
+       
             dispatch(isAuth(data.isAuth));
-            return data.clientsList;
-          
+          return data.clientsList;
         })
         .then(data=> {
-            dispatch(clientsList(data))
+            console.info('API=>clientList',data);
+            if ( data )  dispatch(clientsList(data))
         })
         .catch(err => {
             console.error(err)
