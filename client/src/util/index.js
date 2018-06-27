@@ -1,10 +1,7 @@
 import {
     connectNewUser,
     disconnectNewUser,
-    newMessage,
-    clientsList,
-    isReg,
-    isAuth
+    newMessage
 } from '../actions';
 import store from '../store';
 
@@ -19,7 +16,7 @@ export default ((wsUrl) => {
     }
     ws.onmessage = m => {
         const messObj = JSON.parse(m.data);
-console.log('FROM_SERVER=>',messObj)
+console.error('FROM_SERVER=>',messObj)
         switch (messObj.type) {
             case 'connect_new_user':
                 dispatch(connectNewUser(messObj))
@@ -29,13 +26,6 @@ console.log('FROM_SERVER=>',messObj)
                 break;
             case 'message':
                 dispatch(newMessage(messObj.data))
-                break;
-                case 'regStatus':
-               
-                dispatch(isReg(messObj))
-                break;
-                case 'isAuth':
-               dispatch(isAuth(messObj))
                 break;
                 case 'clientsList':
                 dispatch(clientsList(messObj.data))

@@ -8,6 +8,7 @@ const peopleReducer = (state = [], action) => {
     } = action;
     switch (type) {
         case constants.CLIENTS_LIST:
+        console.error('peopleReducer',action)
             return action.data
             break;
         case constants.CONNECTED_NEW_USER:
@@ -17,7 +18,6 @@ const peopleReducer = (state = [], action) => {
                 userID
             })
             break;
-
         case constants.DISCONNECT_NEW_USER:
             return state.filter(u => u.userID !== userID)
 

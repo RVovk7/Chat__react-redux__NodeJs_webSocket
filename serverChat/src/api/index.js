@@ -11,8 +11,6 @@ const app = express();
 console.log('initRouters=>')
 app.use('/questions/', questions(models,{config})) 
 
-
-
 app.use(errorHandler);
 return app
 }

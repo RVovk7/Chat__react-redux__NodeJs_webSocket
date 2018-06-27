@@ -11,20 +11,18 @@ export const connectNewUser = data => {
         userID,
         avatar
     }
-
 };
-export const disconnectNewUser = userID => {
-    return {
-        type: constants.DISCONNECT_NEW_USER,
-        userID
-    }
-}
+export const disconnectNewUser = userID => ({
+    type: constants.DISCONNECT_NEW_USER,
+    userID
+})
+
 export const clientsList = data => {
     return {
         type: constants.CLIENTS_LIST,
         data
     }
-}
+};
 export const newMessage = data => {
     const {
         time,
@@ -39,17 +37,18 @@ export const newMessage = data => {
         author,
         color
     }
-}
+};
 export const isReg = data => {
+    console.log('actionIsReg', data)
     return {
         type: constants.IS_REG,
-        regStatus: data.regStatus
+        regStatus: data
     }
-}
+};
 export const isAuth = data => {
-    console.log('actionIsAuth',data)
-   return {
-    type: constants.IS_AUTH,
-    isAuth : data.isAuth
-   } 
-}
+
+    return {
+        type: constants.IS_AUTH,
+        isAuth: data
+    }
+};

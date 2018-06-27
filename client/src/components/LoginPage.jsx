@@ -1,21 +1,18 @@
 import React, { Component } from 'react';
-import ws from '../util';
+import authorize from '../api';
 class LoginPage extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-          isReg: false
+            isReg: false,
+            isAuth: false
         }
     }
-    static getDerivedStateFromProps(nextProps){
-     if(nextProps.isReg !=='0') {
+    static getDerivedStateFromProps(nextProps) {
         return {
-            isReg : nextProps.isReg[0]
-        }   
-     }
-     else {
-        return null
-    } 
+            isReg: nextProps.isReg,
+            isAuth: nextProps.isAuth
+        }
     }
     singClick = () => {
         this.classToggle.classList.toggle('s--signup');
@@ -43,13 +40,13 @@ class LoginPage extends Component {
         const emailValid = emailRegex.test(email);
         if (emailValid && login.trim() && pass.trim()) {
             const authData = {
-                type: 'auth',
                 login,
                 email,
                 pass
             }
-            ws.emit(authData);
+            authorize.isReg(authData);
         }
+
         else {
             this.regLogin.value = ''
             this.regEmail.value = ''
@@ -63,29 +60,27 @@ class LoginPage extends Component {
             this.regLogin.focus()
         }
     }
-
     authClick = () => {
-        let name = this.uLogin.value,
+        let userName = this.uLogin.value,
             pass = this.uPass.value;
         sessionStorage.setItem('auth', name);
         const data = {
-            type: "userMSG",
-            name,
+            userName,
             pass
         };
-        
-        ws.emit(data);
+        authorize.isAuth(data);
+
     }
     componentDidUpdate() {
-        if (this.props.isAuth === "-") {
+        if (!this.state.isAuth) {
             this.uLogin.value = '';
             this.uPass.value = '';
             this.logFail.style.visibility = 'visible';
             setTimeout(() => {
                 this.logFail.style.visibility = 'hidden'
-            }, 2000);
+            }, 777);
         }
-        if (this.state.isReg === '-') {
+        if (!this.state.isReg) {
             this.regStatus.innerHTML = "Login is already exist";
             this.regStatus.style.color = 'red';
             this.regLogin.value = '';
@@ -95,10 +90,9 @@ class LoginPage extends Component {
             this.regStatus.style.visibility = 'visible';
             setTimeout(() => {
                 this.regStatus.style.visibility = 'hidden';
-
             }, 777);
         }
-        if (this.state.isReg === '+') {
+        if (this.state.isReg) {
             this.regStatus.innerHTML = 'registration is Successful';
             this.regStatus.style.color = 'green';
             this.regLogin.value = '';
@@ -112,6 +106,7 @@ class LoginPage extends Component {
         }
     }
     render() {
+       
         return (
             <div ref={div => this.classToggle = div} className="cont">
                 <div className="form sign-in">

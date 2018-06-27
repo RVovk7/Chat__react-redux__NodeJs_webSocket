@@ -1,10 +1,12 @@
 import constants from '../constants';
-let count = 0;
-export default (state ='0', action) => {
-   count = Math.round(++count % 2);
+export default (state = [], action) => {
     switch (action.type) {
-        case constants.IS_AUTH: 
-            return `${action.isAuth}${count}`;
+        case constants.IS_AUTH:
+        console.log('authRed',action.isAuth)
+            return {
+                ...state,
+                isAuth: action.isAuth
+            };
         default:
             return state;
     }

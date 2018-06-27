@@ -1,7 +1,8 @@
 ﻿const express = require('express'),
   http = require('http'),
   path = require('path'),
-  mongoose = require('mongoose');
+  mongoose = require('mongoose'),
+  bodyParser = require('body-parser');
 mongoose.connect('mongodb://localhost:3001/chatDB')
   .then(() => console.log('DB running on port 3001'))
   .catch((e) => {
@@ -13,7 +14,6 @@ const app = express(),
   wss = new WebSocketServer({
     server: server
   });
-
 const regSchema = new mongoose.Schema({
   login: {
     type: String,
@@ -25,16 +25,17 @@ const regSchema = new mongoose.Schema({
   email: String,
   pass: String
 });
-const userDB = mongoose.model('userDB', regSchema);
-
-
 let clients = [];
 let clientsList = [];
+let userID;
+const userDB = mongoose.model('userDB', regSchema);
 ///////WebSocet
 wss.on('connection', ws => {
+ userID = Date.now()
   clients.push(Object.assign(ws, {
-    userID: Date.now()
+    userID
   }));
+  console.log('ws.userID',ws.userID)
   ws.on('message', msg => {
     const fromClient = JSON.parse(msg);
 
@@ -42,62 +43,23 @@ wss.on('connection', ws => {
 
       case 'userMSG':
         userName = fromClient.name;
-        const avatar = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0${Math.floor(Math.random() * 9)+1}.jpg`;
-        const sData = {
+      /*   const sData = {
           userName,
           userID: ws.userID,
           avatar
-        }
-      
-        //console.log( ...clients);
-       
-        ///send to current
-     
-  
-      userDB.find({
-        login: userName,
-        pass : fromClient.pass
-      })
-      .then(u=>{
-       
-        if (u.length !==0 ){
-          ws.send(JSON.stringify({
-            type: 'isAuth',
-            isAuth : '+'
-          }));
-          clientsList.push({
-            userName,
-            userID: ws.userID,
-            avatar
-          });
-          ws.send(JSON.stringify({
-            type: 'clientsList',
-            data: clientsList
-          }));
-        }
-        else{
-          ws.send(JSON.stringify({
-            type: 'isAuth',
-            isAuth : '-'
-          }));
-        }
-      })
-      .catch(er => {
-        console.error(er);
-      })
-        ///send to all except current client
+        }; */
+///send to all except current client
         for (let i = 0; i < clients.length - 1; i++) {
           clients[i].send(JSON.stringify({
             type: 'connect_new_user',
             userName,
             avatar,
-            userID: ws.userID,
+            userID,
           }));
         }
         console.log(userName + ' login');
         break;
       case 'textMSG':
-        console.log(userName + ' say: ' + fromClient.text);
         let obj = {
           time: (new Date()).getTime(),
           text: fromClient.text,
@@ -112,33 +74,6 @@ wss.on('connection', ws => {
           clients[i].send(json);
         }
         break;
-       case 'auth':
-        delete fromClient.type;
-        console.log('authFromClient', fromClient);
-        const runDB = async () => {
-        
-           await  userDB.find({
-                login: fromClient.login
-              })
-              .then(u => {
-
-                if (u.length === 0) {
-                  userDB.create(fromClient);
-                  ws.send(JSON.stringify({
-                    type: 'regStatus',
-                    regStatus: "+"
-                  }));
-                } else {
-                  ws.send(JSON.stringify({
-                    type: 'regStatus',
-                    regStatus: '-'
-                  }));
-                }
-              });
-        }
-
-        runDB();
-        break; 
     }
   });
   ws.on('close', () => {
@@ -154,7 +89,63 @@ wss.on('connection', ws => {
     }
   });
 });
+//////////
+/////////authorization =>//
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+  next();
+});
+app.use(bodyParser.json());
+app.post('/api/reg', (req, res) => {
+  userDB.find({
+      login: req.body.login
+    })
+    .then(u => {
+      if (u.length === 0) {
+        userDB.create(req.body);
+        res.send(JSON.stringify({
+          isReg: true
+        }))
+      } else {
+        res.send(JSON.stringify({
+          isReg: false
+        }))
+      }
+    });
+});
 
+app.post('/api/auth', (req, res) => {
+  userDB.find({
+      userName: req.body.login,
+      pass: req.body.pass
+    })
+    .then(u => {
+      const avatar = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/chat_avatar_0${Math.floor(Math.random() * 9)+1}.jpg`;
+      if (u.length !== 0) {
+        clientsList.push({
+          userName: req.body.login,
+          userID: Date.now(),
+          avatar
+        });
+        res.send(JSON.stringify({
+          isAuth: true,
+          clientsList
+        }));
+      } else {
+        res.send(JSON.stringify({
+          isAuth: false
+        }));
+      }
+    })
+    .catch(er => {
+      console.error(er);
+    })
+});
+//////////
+/////////
 app.configure(() => {
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
@@ -166,9 +157,9 @@ app.configure(() => {
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
- app.configure('development', function () {
+app.configure('development', function () {
   app.use(express.errorHandler());
-}); 
+});
 app.get('/', (req, res) => {
   res.sendfile('views/chat.html');
 });

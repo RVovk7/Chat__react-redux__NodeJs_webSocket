@@ -8,23 +8,17 @@ class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isAuth: null
+            isAuth: false
         }
     }
-
-    static getDerivedStateFromProps(nextProps) {
-        if(nextProps.isAuth !== '0')  {
+     static getDerivedStateFromProps(nextProps) {
             return {
-                isAuth: nextProps.isAuth[0]
+                isAuth: nextProps.isAuth.isAuth,
+                isReg: nextProps.isReg.regStatus
             }
-        }
-        else {
-            return null
-        }
-    
-    }
+    } 
     render() {
-        if (this.state.isAuth === "+") {
+        if (this.state.isAuth) {
             return (
                 <Switch>
                       <Route patch='/chat' component={ChatWrap} />
@@ -34,15 +28,15 @@ class Login extends Component {
         } else {
             return (
                 <Switch>
-                    <Route patch='/' render={() => (<LoginPage isReg={this.props.isReg} isAuth={this.state.isAuth} />)} /> 
+                    <Route patch='/' render={() => (<LoginPage isReg={this.state.isReg} isAuth={this.state.isAuth} />)} /> 
                 </Switch>
+            
             )
         }
 
     }
 }
 const mapStateToProps = state => {
-
     return {
         isReg: state.regReducer,
         isAuth: state.authReducer
