@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UserItem from '../components/UserItem.jsx';
 import PeopleSearch from '../components/PeopleSearch.jsx';
@@ -11,9 +12,9 @@ class PeopleList extends Component {
     render() {
         return (
             <div className='wolf7'>
-                <PeopleSearch />
+            <PeopleSearch />
                 <ul className="list">
-                    {this.props.state.peopleReducer.map(p => {
+                    {this.props.clientsList.map(p => {
                         return (
                             <UserItem key={p.userID} userName={p.userName} avatar={p.avatar} />
                         )
@@ -24,14 +25,12 @@ class PeopleList extends Component {
         );
     }
 }
-
 const mapStateToProps = state => {
     return {
-        state
+      clientsList : state.peopleReducer
     }
 }
-const mapDispatchToProps = dispatch => {
-    return { dispatch };
+PeopleList.propTypes = {
+    clientsList: PropTypes.array.isRequired
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(PeopleList);
+export default connect(mapStateToProps)(PeopleList);

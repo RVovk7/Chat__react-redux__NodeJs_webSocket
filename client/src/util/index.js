@@ -16,7 +16,7 @@ export default ((wsUrl) => {
     }
     ws.onmessage = m => {
         const messObj = JSON.parse(m.data);
-console.error('FROM_SERVER=>',messObj)
+        console.log('FROM_SERVER=>', messObj)
         switch (messObj.type) {
             case 'connect_new_user':
                 dispatch(connectNewUser(messObj))
@@ -27,7 +27,7 @@ console.error('FROM_SERVER=>',messObj)
             case 'message':
                 dispatch(newMessage(messObj.data))
                 break;
-                case 'clientsList':
+            case 'clientsList':
                 dispatch(clientsList(messObj.data))
                 break;
             default:
@@ -36,7 +36,7 @@ console.error('FROM_SERVER=>',messObj)
     }
     let contReconnect = 0;
     const emit = message => {
-  
+
         if (contReconnect > 5) return
         if (ws.readyState === ws.CONNECTING) {
             setTimeout(() => {

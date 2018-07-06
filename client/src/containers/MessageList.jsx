@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ChatHeader from '../components/ChatHeader.jsx';
 import MessageItem from '../components/MessageItem.jsx';
@@ -31,7 +32,7 @@ class MessageList extends Component {
             type: "textMSG",
             text: this.textSendRef.current.value,
             author: sessionStorage.getItem('auth'),
-            color: sessionStorage.getItem('userColor')   
+            color: sessionStorage.getItem('userColor')   ///if you have troble with message color =>fix intro
         });
     }
     render() {
@@ -40,7 +41,7 @@ class MessageList extends Component {
                 <ChatHeader messageCount={this.props.messages.length} />
                 <div className="chat-history" ref={chatWrap => this.chatWrap = chatWrap}>
                     <ul ref={ul => this.ul = ul}>
-                        {this.props.messages.map(m => <MessageItem key={m.time} text={m.text} author={m.author} color={m.color} />)}
+                        {this.props.messages.map(m => <MessageItem key={m.time} time={m.time} text={m.text} author={m.author} color={m.color} />)}
                     </ul>
                 </div>
                 <ChatControl textSendRef={this.textSendRef} sendClick={this.sendClick} enterPress={this.enterPress} />
@@ -56,7 +57,9 @@ const mapStateToProps = state => {
         people: state.peopleReducer
     }
 }
-const mapDispatchToProps = dispatch => {
-    return { dispatch };
+MessageList.propTypes = {
+    message: PropTypes.array,
+    people: PropTypes.array.isRequired
+
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MessageList);
+export default connect(mapStateToProps)(MessageList);

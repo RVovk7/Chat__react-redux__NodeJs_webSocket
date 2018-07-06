@@ -1,5 +1,4 @@
 import constants from '../constants';
-let count = 0;
 const regReducer = (state = {}, action) => {
     const {
         type,

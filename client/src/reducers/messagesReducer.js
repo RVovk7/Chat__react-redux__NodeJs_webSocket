@@ -5,12 +5,13 @@ const messagesReducer = (state = [], action) => {
         
         case constants.NEW_MESSAGE:
           
-            return state.concat({
+            return[
+                {
                 time: action.time,
                 text: action.text,
                 author: action.author,
                 color: action.color
-            })
+            }]
     }
 
     return state;

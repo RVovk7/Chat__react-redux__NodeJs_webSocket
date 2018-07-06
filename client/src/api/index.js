@@ -12,7 +12,6 @@ export default {
             })
             .then(res => res.json())
             .then((data) => {
-                console.error(data.isReg)
              dispatch(isReg(data.isReg))
             })
             .catch(er => console.error(er));
@@ -32,7 +31,6 @@ export default {
           return data.clientsList;
         })
         .then(data=> {
-            console.info('API=>clientList',data);
             if ( data )  dispatch(clientsList(data))
         })
         .catch(err => {

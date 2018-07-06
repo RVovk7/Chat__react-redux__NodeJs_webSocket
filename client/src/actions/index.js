@@ -1,15 +1,8 @@
 import constants from '../constants';
 export const connectNewUser = data => {
-    const {
-        userName,
-        userID,
-        avatar
-    } = data
     return {
         type: constants.CONNECTED_NEW_USER,
-        userName,
-        userID,
-        avatar
+       ...data
     }
 };
 export const disconnectNewUser = userID => ({
@@ -24,21 +17,14 @@ export const clientsList = data => {
     }
 };
 export const newMessage = data => {
-    const {
-        time,
-        text,
-        author,
-        color
-    } = data;
+    
     return {
         type: constants.NEW_MESSAGE,
-        time,
-        text,
-        author,
-        color
+       ...data
     }
 };
 export const isReg = data => {
+    
     console.log('actionIsReg', data)
     return {
         type: constants.IS_REG,

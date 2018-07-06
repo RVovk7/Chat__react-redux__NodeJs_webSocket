@@ -1,24 +1,19 @@
 import constants from '../constants';
 const peopleReducer = (state = [], action) => {
     const {
-        userName,
         userID,
         type,
-        avatar
     } = action;
     switch (type) {
         case constants.CLIENTS_LIST:
-        console.info('peopleReducer=>CLIENT_LIST', userName,
-        userID,
-        avatar);
-            return action.data
+            return ([
+                ...action.data
+            ])
             break;
         case constants.CONNECTED_NEW_USER:
-            return state.concat({
-                userName,
-                avatar,
-                userID
-            })
+            return [
+                ...action
+            ]
             break;
         case constants.DISCONNECT_NEW_USER:
             return state.filter(u => u.userID !== userID)

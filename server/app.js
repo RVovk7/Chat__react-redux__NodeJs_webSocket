@@ -1,6 +1,5 @@
 ﻿const express = require('express'),
   http = require('http'),
-  path = require('path'),
   mongoose = require('mongoose'),
   bodyParser = require('body-parser');
 mongoose.connect('mongodb://localhost:3001/chatDB')
@@ -14,6 +13,7 @@ const app = express(),
   wss = new WebSocketServer({
     server: server
   });
+  /////mongoose schema
 const regSchema = new mongoose.Schema({
   login: {
     type: String,
@@ -25,17 +25,19 @@ const regSchema = new mongoose.Schema({
   email: String,
   pass: String
 });
+
+const userDB = mongoose.model('userDB', regSchema);
+///////
 let clients = [];
 let clientsList = [];
 let userID;
-const userDB = mongoose.model('userDB', regSchema);
 ///////WebSocet
 wss.on('connection', ws => {
   userID = Date.now()
   clients.push(Object.assign(ws, {
     userID
   }));
-  console.log('ws.userID', ws.userID)
+  console.log(`${clientsList.userName},CONNECT: ${ws.userID===userID}`)
   ws.on('message', msg => {
     const fromClient = JSON.parse(msg);
 
@@ -54,7 +56,7 @@ wss.on('connection', ws => {
             type: 'connect_new_user',
             userName,
             avatar,
-            userID,
+            userID
           }));
         }
         console.log(userName + ' login');
@@ -83,6 +85,7 @@ wss.on('connection', ws => {
       type: 'disconnect_user',
       userID: ws.userID
     });
+    console.log('wsClose',clientsList.userName)
     clientsList = clientsList.filter(u => u.userID !== ws.userID);
     for (let i = 0; i < clients.length; i++) {
       clients[i].send(json);
@@ -100,18 +103,18 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 app.post('/api/reg', (req, res) => {
-  userDB.find({
+  userDB.findOne({
       login: req.body.login
     })
     .then(u => {
-      if (u.length === 0) {
+      if (u) {
         userDB.create(req.body);
         res.send(JSON.stringify({
-          isReg: true
+          isReg: false
         }))
       } else {
         res.send(JSON.stringify({
-          isReg: false
+          isReg: true
         }))
       }
     });
@@ -127,7 +130,7 @@ app.post('/api/auth', (req, res) => {
       if (u) {
         clientsList.push({
           userName: u.login,
-          userID: Date.now(),
+          userID,
           avatar
         });
         res.send(JSON.stringify({
@@ -147,24 +150,6 @@ app.post('/api/auth', (req, res) => {
 });
 //////////
 /////////
-app.configure(() => {
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
-});
-
-app.configure('development', function () {
-  app.use(express.errorHandler());
-});
-app.get('/', (req, res) => {
-  res.sendfile('views/chat.html');
-});
-
-server.listen(app.get('port'), () => {
-  console.log("Express server listening on port " + app.get('port'));
+server.listen(3000, () => {
+  console.log("Express server listening on port " + 3000);
 });

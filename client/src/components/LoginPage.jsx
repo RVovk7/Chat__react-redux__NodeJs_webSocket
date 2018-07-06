@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import authorize from '../api';
 class LoginPage extends Component {
     constructor(props) {
@@ -161,5 +162,9 @@ class LoginPage extends Component {
             </div>
         );
     }
+}
+LoginPage.propTypes = {
+isReg: PropTypes.bool,
+isAuth: PropTypes.bool
 }
 export default LoginPage;

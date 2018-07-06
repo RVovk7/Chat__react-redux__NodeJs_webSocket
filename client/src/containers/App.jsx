@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import Login from './Login.jsx';
 import store from '../store';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-//import {hot}from 'react-hot-loader';
 localStorage.removeItem('auth'); 
 
 const App = () => <Provider store={store}>
@@ -14,6 +13,5 @@ const App = () => <Provider store={store}>
         </Router>
     </div>
 </Provider>
-
 
 export default (App);

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ChatWrap from './ChatWrap.jsx';
 import LoginPage from '../components/LoginPage.jsx';
 import { connect } from 'react-redux';
@@ -44,5 +45,10 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
     return { dispatch };
+}
+Login.propTypes = {
+    isReg: PropTypes.object.isRequired,
+    isAuth: PropTypes.object.isRequired
+
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
